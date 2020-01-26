@@ -1,18 +1,14 @@
-var roleCarryer = {
+class roleCarryer{
 
     /**Initialize function
      * 
      * @param {*} creep 
      */
-    init: function (creep) {
-        
-    },
+    constructor(creep) {
+        this.creep = creep;
+    }
 
-    /**Run function
-     * 
-     * @param {*} creep 
-     */
-    run: function(creep) {
+    run() {
         
     }
 };

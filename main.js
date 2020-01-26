@@ -35,6 +35,8 @@ module.exports.loop = function () {
     // Update Loop
     for(var name in Game.creeps) {
         var creep = Game.creeps[name];
-        roles[creep.memory.role].run(creep);
+        // Call class constructor
+        var role = new roles[creep.memory.role](creep);
+        role.run();
     }
 }
