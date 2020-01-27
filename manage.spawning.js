@@ -1,4 +1,4 @@
-var utils = require('manage.room_utils');
+var utils = require("manage.room_utils");
 
 var manageSpawning = {
 
@@ -15,12 +15,12 @@ var manageSpawning = {
             }
             return total;
         }
-        max_creeps_roles['harvester'] = max_harvester(room);
+        max_creeps_roles["harvester"] = max_harvester(room);
 
         var max_upgrader = function() {
             return 1;
         }
-        max_creeps_roles['upgrader'] = max_upgrader();
+        max_creeps_roles["upgrader"] = max_upgrader();
 
         var max_builder = function(room) {
             var sources = room.find(FIND_CONSTRUCTION_SITES);
@@ -34,7 +34,7 @@ var manageSpawning = {
             var max = Math.max(Math.ceil(total/5), 1);
             return max;
         }
-        max_creeps_roles['builder'] = max_builder(room);
+        max_creeps_roles["builder"] = max_builder(room);
 
         return max_creeps_roles;
     },
@@ -51,19 +51,19 @@ var manageSpawning = {
     get_creep_body: function (role) {
         var body = [];
         switch (role) {
-            case 'harvester':
+            case "harvester":
                 body.push(MOVE);
                 body.push(WORK);
                 body.push(WORK);
                 body.push(CARRY);
                 break;
-            case 'upgrader':
+            case "upgrader":
                 body.push(MOVE);
                 body.push(WORK);
                 body.push(WORK);
                 body.push(CARRY);
                 break;
-            case 'builder':
+            case "builder":
                 body.push(MOVE);
                 body.push(MOVE);
                 body.push(WORK);
@@ -89,7 +89,7 @@ var manageSpawning = {
         else{
             roles_ = Object.keys(roles);
         }
-        console.log('roles_: ', roles_[0]);
+        console.log("roles_: ", roles_[0]);
 
         // List all creep's roles and counts how many exists
         var creeps_roles = manageSpawning.get_creeps_roles(roles_);
@@ -115,11 +115,11 @@ var manageSpawning = {
 
     priority_creeps: function(spawner) {
         if (Game.creeps.length < 1) {
-            var can_spawn = Game.spawns[spawner].spawnCreep([WORK,CARRY,MOVE], 'harvestor.basic.' + Game.time,
-                            {memory: {role: 'harvester.basic'}, dryRun: true});
+            var can_spawn = Game.spawns[spawner].spawnCreep([WORK,CARRY,MOVE], "harvestor.basic." + Game.time,
+                            {memory: {role: "harvester.basic"}, dryRun: true});
             if (can_spawn) {
-                Game.spawns[spawner].spawnCreep([WORK,CARRY,MOVE], 'harvestor.basic.' + Game.time,
-                {memory: {role: 'harvester.basic'}});
+                Game.spawns[spawner].spawnCreep([WORK,CARRY,MOVE], "harvestor.basic." + Game.time,
+                {memory: {role: "harvester.basic"}});
             }
             return true;
         }

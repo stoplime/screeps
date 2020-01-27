@@ -1,27 +1,27 @@
 
 // initialize roles
 var roles = {};
-roles['harvester'] = require('role.harvester');
-roles['upgrader'] = require('role.upgrader');
-roles['builder'] = require('role.builder');
+roles["harvester"] = require("role.harvester");
+roles["upgrader"] = require("role.upgrader");
+roles["builder"] = require("role.builder");
 
-var utils = require('manage.room_utils');
-var manage_spawn = require('manage.spawning');
+var utils = require("manage.room_utils");
+var manage_spawn = require("manage.spawning");
 
 module.exports.loop = function () {
     console.log("roles", roles);
-    var room_ = Game.spawns['Spawn1'].room;
+    var room_ = Game.spawns["Spawn1"].room;
 
     // Spawning Management
-    manage_spawn.spawn_creeps(roles, room_, 'Spawn1');
+    manage_spawn.spawn_creeps(roles, room_, "Spawn1");
     
-    if(Game.spawns['Spawn1'].spawning) { 
-        var spawningCreep = Game.creeps[Game.spawns['Spawn1'].spawning.name];
-        Game.spawns['Spawn1'].room.visual.text(
-            '🛠️' + spawningCreep.memory.role,
-            Game.spawns['Spawn1'].pos.x + 1, 
-            Game.spawns['Spawn1'].pos.y, 
-            {align: 'left', opacity: 0.8});
+    if(Game.spawns["Spawn1"].spawning) { 
+        var spawningCreep = Game.creeps[Game.spawns["Spawn1"].spawning.name];
+        Game.spawns["Spawn1"].room.visual.text(
+            "🛠️" + spawningCreep.memory.role,
+            Game.spawns["Spawn1"].pos.x + 1, 
+            Game.spawns["Spawn1"].pos.y, 
+            {align: "left", opacity: 0.8});
     }
 
     console.log(room_);

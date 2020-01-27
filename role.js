@@ -1,18 +1,19 @@
-var role = require("role");
-
-class roleCarryer extends role {
+class role {
 
     /**Initialize function
      * 
      * @param {*} creep 
      */
     constructor(creep) {
-        super(creep);
+        this.creep = creep;
     }
 
+    /**Run function
+     * 
+     */
     run() {
         
     }
 };
 
-module.exports = roleCarryer;
+module.exports = role;

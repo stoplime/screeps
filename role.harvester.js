@@ -1,17 +1,19 @@
-class roleHarvester {
+var role = require("role");
+
+class roleHarvester extends role {
     /**Initialize function
      * 
      * @param {*} creep 
      */
     constructor(creep) {
-        this.creep = creep;
+        super(creep);
     }
 
     run() {
 	    if(this.creep.carry.energy < this.creep.carryCapacity) {
             var sources = this.creep.room.find(FIND_SOURCES);
             if(this.creep.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
-                this.creep.moveTo(sources[0], {visualizePathStyle: {stroke: '#ffaa00'}});
+                this.creep.moveTo(sources[0], {visualizePathStyle: {stroke: "#ffaa00"}});
             }
         }
         else {
@@ -24,7 +26,7 @@ class roleHarvester {
             });
             if(targets.length > 0) {
                 if(this.creep.transfer(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                    this.creep.moveTo(targets[0], {visualizePathStyle: {stroke: '#ffffff'}});
+                    this.creep.moveTo(targets[0], {visualizePathStyle: {stroke: "#ffffff"}});
                 }
             }
         }

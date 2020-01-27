@@ -11,7 +11,7 @@ var manageRoomUtils = {
     /**Gets adjacent terrain values at a point in a room
      * 
      * @param {Room} room The given room object.
-     * i.e. Game.spawns['Spawn1'].room
+     * i.e. Game.spawns["Spawn1"].room
      * @param {RoomPosition} pos The position of interest.
      * i.e. room_.find(FIND_SOURCES)[0].pos
      * 
