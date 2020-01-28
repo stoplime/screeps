@@ -1,4 +1,5 @@
 var utils = require("manage.room_utils");
+var manage_bodies = require("manage.bodies");
 
 var manageSpawning = {
 
@@ -47,55 +48,25 @@ var manageSpawning = {
         }
         return creeps_roles;
     },
-
-    get_creep_body: function (role) {
-        var body = [];
-        switch (role) {
-            case "harvester":
-                body.push(MOVE);
-                body.push(WORK);
-                body.push(WORK);
-                body.push(CARRY);
-                break;
-            case "upgrader":
-                body.push(MOVE);
-                body.push(WORK);
-                body.push(WORK);
-                body.push(CARRY);
-                break;
-            case "builder":
-                body.push(MOVE);
-                body.push(MOVE);
-                body.push(WORK);
-                body.push(CARRY);
-                body.push(CARRY);
-                break;
-        
-            default:
-                break;
-        }
-        return body;
-    },
     
     spawn_creeps: function(roles, room, spawner) {
         var priority = manageSpawning.priority_creeps(spawner);
         if (priority) {
             return;
         }
-        var roles_;
-        if (roles instanceof Array) {
-            roles_ = roles;
-        }
-        else{
-            roles_ = Object.keys(roles);
-        }
-        console.log("roles_: ", roles_[0]);
+        var roles_ = Object.keys(roles);
+        // console.log("roles_: ", roles_[0]);
 
         // List all creep's roles and counts how many exists
         var creeps_roles = manageSpawning.get_creeps_roles(roles_);
 
         // Find the max creep's roles
-        var max_creeps_roles = manageSpawning.max_creep_roles(room);
+        if (room.memory.max_creep_roles == null) {
+            room.memory.max_creep_roles = manageSpawning.max_creep_roles(room);
+        }
+        var max_creeps_roles = room.memory.max_creep_roles;
+
+        var capacity = room.energyAvailable;
 
         for (let i = 0; i < roles_.length; i++) {
             const role = roles_[i];
@@ -103,11 +74,14 @@ var manageSpawning = {
             if (!(role in max_creeps_roles)) continue;
             var diff_creeps = max_creeps_roles[role] - creeps_roles[role];
             var newName = role + "." + Game.time;
-            var can_spawn = Game.spawns[spawner].spawnCreep(manageSpawning.get_creep_body(role), newName, 
+            var can_spawn = Game.spawns[spawner].spawnCreep(manage_bodies.manageBodies(role, capacity), newName, 
                             {memory: {role: role}, dryRun: true});
             if(diff_creeps > 0 && can_spawn == 0) {
-                Game.spawns[spawner].spawnCreep(manageSpawning.get_creep_body(role), newName, 
+                Game.spawns[spawner].spawnCreep(manage_bodies.manageBodies(role, capacity), newName, 
                 {memory: {role: role}});
+                var newCreep = Game.creeps[newName];
+                var newCreepRole = new roles[role](newCreep);
+                newCreepRole.init();
                 return;
             }
         }

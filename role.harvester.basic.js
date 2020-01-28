@@ -7,21 +7,26 @@ class roleHarvesterBasic extends roleHarvester {
      */
     constructor(creep) {
         super(creep);
+        var sources = this.creep.room.find(FIND_SOURCES);
+        creep.memory.source = sources[Math.floor(Math.random()*sources.length)];
     }
 
-    /** @param {Creep} creep **/
+    init() {
+        super.init();
+        var sources = this.creep.room.find(FIND_SOURCES);
+        creep.memory.source = sources[Math.floor(Math.random()*sources.length)];
+    }
+
+    /**Run function
+     * 
+     */
     run() {
-	    if(this.creep.carry.energy < this.creep.carryCapacity) {
-            var sources = this.creep.room.find(FIND_SOURCES);
-            if(this.creep.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
-                this.creep.moveTo(sources[0], {visualizePathStyle: {stroke: "#ffaa00"}});
-            }
-        }
-        else {
+	    super.run();
+        if(this.creep.carry.energy >= this.creep.carryCapacity) {
             var targets = this.creep.room.find(FIND_STRUCTURES, {
-                    filter: (structure) => {
-                        return (structure.structureType == STRUCTURE_SPAWN) && structure.energy < structure.energyCapacity;
-                    }
+                filter: (structure) => {
+                    return (structure.structureType == STRUCTURE_SPAWN) && structure.energy < structure.energyCapacity;
+                }
             });
             if(targets.length > 0) {
                 if(this.creep.transfer(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
@@ -31,10 +36,17 @@ class roleHarvesterBasic extends roleHarvester {
         }
         
         // Check if more creeps have spawned to replace
-        if (Game.this.creeps.length > 4) {
+        if (Game.creeps.length > 4) {
             this.creep.suicide();
         }
-	}
+    }
+    
+    /**Returns a list of body parts
+     * needs to be overrided by inheritance
+     */
+    get_body() {
+        return [MOVE, WORK, CARRY];
+    }
 };
 
 module.exports = roleHarvesterBasic;

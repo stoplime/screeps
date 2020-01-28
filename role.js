@@ -8,6 +8,10 @@ class role {
         this.creep = creep;
     }
 
+    init() {
+        
+    }
+
     /**Run function
      * 
      */
