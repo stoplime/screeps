@@ -13,7 +13,7 @@ var Role = {
 
     common_update: function(creep) {
         if (creep.memory.recycle && !creep.pos.inRangeTo(Game.spawns["Spawn1"], 1)) {
-            creep.moveTo(Game.spawns["Spawn1"], {visualizePathStyle: {stroke: "#ffffff"}});
+            creep.moveTo(Game.spawns["Spawn1"], {visualizePathStyle: {stroke: "#ff0000"}});
         }
         else if (creep.pos.inRangeTo(Game.spawns["Spawn1"], 1)) {
             var task = {};

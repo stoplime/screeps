@@ -15,6 +15,7 @@ var ManageBodies = {
         }
 
         switch (role_name) {
+            // List of Roles
             case "harvester":
             case "upgrader":
                 if (capacity < 300) {

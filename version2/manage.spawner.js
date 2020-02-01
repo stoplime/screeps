@@ -59,8 +59,9 @@ var ManageSpawner = {
                     Memory.Manage.creep_counts[task.role]++;
                     // Initialize creep role-specific memory
                     switch (task.role) {
+                        // List of Roles
                         case "harvester":
-                            creep.Memory.source = RoleUtils.get_next_free_source(creep.room).id;
+                            creep.memory.source = RoleUtils.get_next_free_source(creep.room).id;
                             break;
                         case "upgrader":
                             break;

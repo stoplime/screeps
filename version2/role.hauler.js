@@ -5,16 +5,6 @@ var FlagUtils = require("flag.utils");
 var RoleHarvester = {
 
     miner_to_spawn: function(creep) {
-        // Toggle filling up and unloading
-        if (creep.memory.filling_up == null) {
-            creep.memory.filling_up = true;
-        }
-        if (creep.memory.filling_up && creep.store.getFreeCapacity(RESOURCE_ENERGY) == 0) {
-            creep.memory.filling_up = false;
-        }
-        else if (!creep.memory.filling_up && creep.store[RESOURCE_ENERGY] == 0) {
-            creep.memory.filling_up = true;
-        }
         // Initialize assign this hauler to a harvester
         if (!creep.memory.harvester) {
             var harvesters = _.filter(Game.creeps, function(creep) {
@@ -25,6 +15,16 @@ var RoleHarvester = {
                 creep.memory.harvester = harvesters[0].name;
                 harvesters[0].memory.hauler = creep.name;
             }
+        }
+        // Toggle filling up and unloading
+        if (creep.memory.filling_up == null) {
+            creep.memory.filling_up = true;
+        }
+        if (creep.memory.filling_up && creep.store.getFreeCapacity(RESOURCE_ENERGY) == 0) {
+            creep.memory.filling_up = false;
+        }
+        else if (!creep.memory.filling_up && creep.store[RESOURCE_ENERGY] == 0) {
+            creep.memory.filling_up = true;
         }
 
         if(creep.memory.filling_up) {

@@ -76,10 +76,6 @@ var RoleUtils = {
         });
         return targets;
     },
-
-    // find_closest_spawn: function(pos) {
-        
-    // }
 };
 
 module.exports = RoleUtils;
