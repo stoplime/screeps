@@ -5,16 +5,7 @@ var FlagUtils = require("flag.utils");
 var RoleBuilder = {
 
     run_build: function(creep) {
-        // Toggle filling up and unloading
-        if (creep.memory.filling_up == null) {
-            creep.memory.filling_up = true;
-        }
-        if (creep.memory.filling_up && creep.store.getFreeCapacity(RESOURCE_ENERGY) == 0) {
-            creep.memory.filling_up = false;
-        }
-        else if (!creep.memory.filling_up && creep.store[RESOURCE_ENERGY] == 0) {
-            creep.memory.filling_up = true;
-        }
+        RoleUtils.filling_up_toggle(creep);
 
         if (creep.memory.filling_up) {
             if (!creep.memory.container) {
@@ -23,6 +14,9 @@ var RoleBuilder = {
             var my_container = Game.getObjectById(creep.memory.container);
             if (my_container != null && creep.withdraw(my_container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                 creep.moveTo(my_container, {visualizePathStyle: {stroke: "#ffaa00"}});
+            }
+            else{
+                RoleBuilder.find_available_resource(creep, creep.room);
             }
         }
         else {
@@ -85,7 +79,7 @@ var RoleBuilder = {
                 const brown_flag = brown_flags[f];
                 for (let c = 0; c < containers.length; c++) {
                     const container = containers[c];
-                    if (brown_flags.pos.inRangeTo(container, 3)) {
+                    if (brown_flag.pos.inRangeTo(container, 3)) {
                         construction_containers.push(container);
                     }
                 }
@@ -93,8 +87,15 @@ var RoleBuilder = {
             var selection = Math.floor(Math.random()*construction_containers.length);
             // Sets the container as creep.memory.container
             creep.memory.container = construction_containers[selection].id;
-        }else{
+        }
+        else if(Memory.Manage.allow_building_from_spawn_resources) {
             creep.memory.container = Game.spawns["Spawn1"].id;
+        }
+        else{
+            var flags = FlagUtils.get_flags_color_in_room(creep.room, COLOR_PURPLE);
+            if (flags.length > 0) {
+                creep.moveTo(flags[0], {visualizePathStyle: {stroke: "#ffffff"}});
+            }
         }
     }
 };

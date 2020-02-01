@@ -5,15 +5,7 @@ var FlagUtils = require("flag.utils");
 var RoleHarvester = {
 
     basic: function(creep) {
-        if (creep.memory.filling_up == null) {
-            creep.memory.filling_up = true;
-        }
-        if (creep.memory.filling_up && creep.store.getFreeCapacity(RESOURCE_ENERGY) == 0) {
-            creep.memory.filling_up = false;
-        }
-        else if (!creep.memory.filling_up && creep.store[RESOURCE_ENERGY] == 0) {
-            creep.memory.filling_up = true;
-        }
+        RoleUtils.filling_up_toggle(creep);
 
         if(creep.memory.filling_up) {
             if(creep.harvest(Game.getObjectById(creep.Memory.source)) == ERR_NOT_IN_RANGE) {
@@ -34,38 +26,47 @@ var RoleHarvester = {
             }
         }
         
-        // Check if more creeps have spawned to replace
-        if (Game.creeps.length > 4) {
-            creep.memory.recycle = true;
-        }
+        // // Check if more creeps have spawned to replace
+        // if (Game.creeps.length > 4) {
+        //     creep.memory.recycle = true;
+        // }
     },
     
     static_harvest: function(creep) {
+        // Get my_container
+        if (!creep.memory.container_id && creep.pos.inRangeTo(Game.getObjectById(creep.Memory.source), 1)) {
+            var containers = creep.room.find(FIND_MY_STRUCTURES, {
+                filter: (structure) => {
+                    return (structure.structureType == STRUCTURE_CONTAINER);
+                    }
+            });
+            var my_container = null;
+            for (let i = 0; i < containers.length; i++) {
+                const container = containers[i];
+                if (container.pos == creep.pos) {
+                    my_container = container;
+                    break;
+                }
+            }
+            if (my_container != null) {
+                creep.memory.container_id = my_container.id;
+            }
+            else {
+                creep.room.createConstructionSite(creep.pos, STRUCTURE_CONTAINER);
+            }
+        }
+
+        // Mine
         if(creep.harvest(Game.getObjectById(creep.Memory.source)) == ERR_NOT_IN_RANGE) {
             creep.moveTo(Game.getObjectById(creep.Memory.source), {visualizePathStyle: {stroke: "#ffaa00"}});
         }
-        else {
-            // check if standing on container
-            if (!creep.memory.container_id) {
-                var containers = creep.room.find(FIND_MY_STRUCTURES, {
-                    filter: (structure) => {
-                        return (structure.structureType == STRUCTURE_CONTAINER);
-                        }
-                });
-                var my_container = null;
-                for (let i = 0; i < containers.length; i++) {
-                    const container = containers[i];
-                    if (container.pos == creep.pos) {
-                        my_container = container;
-                        break;
-                    }
-                }
-                if (my_container != null) {
-                    creep.memory.container_id = my_container.id;
-                }
-                else {
-                    creep.room.createConstructionSite(creep.pos, STRUCTURE_CONTAINER);
-                }
+
+        // Repair my_container
+        if (creep.memory.container_id) {
+            var my_container = Game.getObjectById(creep.memory.container_id);
+            var container_health = my_container.hits/my_container.hitsMax;
+            if (container_health < 0.8) {
+                creep.repair(my_container);
             }
         }
     }

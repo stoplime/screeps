@@ -16,16 +16,7 @@ var RoleHarvester = {
                 harvesters[0].memory.hauler = creep.name;
             }
         }
-        // Toggle filling up and unloading
-        if (creep.memory.filling_up == null) {
-            creep.memory.filling_up = true;
-        }
-        if (creep.memory.filling_up && creep.store.getFreeCapacity(RESOURCE_ENERGY) == 0) {
-            creep.memory.filling_up = false;
-        }
-        else if (!creep.memory.filling_up && creep.store[RESOURCE_ENERGY] == 0) {
-            creep.memory.filling_up = true;
-        }
+        RoleUtils.filling_up_toggle(creep);
 
         if(creep.memory.filling_up) {
             var my_harvester = Game.creeps[creep.memory.harvester];

@@ -26,6 +26,8 @@ var Manage = {
             }
             Memory.Manage.constructions = [];
 
+            Memory.Manage.allow_building_from_spawn_resources = true;
+
             Memory.initialize_global = true;
         }
 	},
