@@ -1,5 +1,6 @@
 // ManageSpawner regulates spawner behavior
 var ManageBodies = require("manage.bodies");
+var RoleUtils = require("role.utils");
 // var Role = require("role");
 
 var ManageSpawner = {
@@ -17,29 +18,36 @@ var ManageSpawner = {
         if (queue.length == 0) return false;
 
         var can_spawn = -1;
-        var task = queue[0];
-        switch (task.mode) {
-            case "creep":
-                can_spawn = Game.spawns[spawn_name].spawnCreep(
-                    task.body,
-                    task.name,
-                    {memory: {role: task.role}, 
-                    dryRun: true}
-                );
+        var task = null;
+        for (let i = 0; i < queue.length; i++) {
+            const task_check = queue[i];
+            switch (task_check.mode) {
+                case "creep":
+                    can_spawn = Game.spawns[spawn_name].spawnCreep(
+                        task_check.body,
+                        task_check.name,
+                        {memory: {role: task_check.role}, 
+                        dryRun: true}
+                    );
+                    break;
+                case "recycle":
+                case "renew":
+                    if (Game.spawns[spawn_name].pos.inRangeTo(
+                            Game.creeps[task_check.creep_name].pos, 1)) {
+                        can_spawn = 0;
+                    }
+                    break;
+            
+                default:
+                    break;
+            }
+            if (can_spawn == 0) {
+                task = task_check;
                 break;
-            case "recycle":
-            case "renew":
-                if (Game.spawns[spawn_name].pos.inRangeTo(
-                        Game.creeps[task.creep_name].pos, 1)) {
-                    can_spawn = 0;
-                }
-                break;
-        
-            default:
-                break;
+            }
         }
 
-        if (can_spawn == 0) {
+        if (task != null) {
             switch (task.mode) {
                 case "creep":
                     Game.spawns[spawn_name].spawnCreep(
@@ -49,6 +57,21 @@ var ManageSpawner = {
                     );
                     // Update global memory
                     Memory.Manage.creep_counts[task.role]++;
+                    // Initialize creep role-specific memory
+                    switch (task.role) {
+                        case "harvester":
+                            creep.Memory.source = RoleUtils.get_next_free_source(creep.room).id;
+                            break;
+                        case "upgrader":
+                            break;
+                        case "builder":
+                            break;
+                        case "hauler":
+                            break;
+                    
+                        default:
+                            break;
+                    }
                     break;
                 case "recycle":
                     Game.spawns[spawn_name].recycleCreep(

@@ -9,7 +9,19 @@ var Role = {
             roles[key] = require("role." + key);
         }
         return roles;
-	}
+	},
+
+    common_update: function(creep) {
+        if (creep.memory.recycle && !creep.pos.inRangeTo(Game.spawns["Spawn1"], 1)) {
+            creep.moveTo(Game.spawns["Spawn1"], {visualizePathStyle: {stroke: "#ffffff"}});
+        }
+        else if (creep.pos.inRangeTo(Game.spawns["Spawn1"], 1)) {
+            var task = {};
+            task.mode = "recycle";
+            task.creep_name = creep.name;
+            Game.spawns[spawn_name].memory.queue.push(task);
+        }
+    },
 };
 
 module.exports = Role;

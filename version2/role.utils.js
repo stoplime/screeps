@@ -50,6 +50,19 @@ var RoleUtils = {
         return sources[Math.floor(Math.random()*sources.length)];
     },
 
+    get_next_free_source: function(room) {
+        var sources = room.find(FIND_SOURCES);
+        for (let i = 0; i < sources.length; i++) {
+            const source = sources[i];
+            const [adjacents, available_count] = RoleUtils.get_adjacent_vacants(room, source.pos);
+            var occupied = RoleUtils.get_adjacent_vacants_occupied(room, source.pos);
+            if (available_count > occupied) {
+                return source;
+            }
+        }
+        return null;
+    },
+
     /**Finds all non-full spawn or extension structures in the room 
      * 
      * @param {Room} room 
@@ -62,7 +75,11 @@ var RoleUtils = {
                 }
         });
         return targets;
-    }
+    },
+
+    // find_closest_spawn: function(pos) {
+        
+    // }
 };
 
 module.exports = RoleUtils;
