@@ -1,4 +1,6 @@
 // ManageSpawner regulates spawner behavior
+var ManageBodies = require("manage.bodies");
+// var Role = require("role");
 
 var ManageSpawner = {
 
@@ -45,6 +47,8 @@ var ManageSpawner = {
                         task.name,
                         {memory: {role: task.role}}
                     );
+                    // Update global memory
+                    Memory.Manage.creep_counts[task.role]++;
                     break;
                 case "recycle":
                     Game.spawns[spawn_name].recycleCreep(
@@ -68,13 +72,27 @@ var ManageSpawner = {
     },
     
     check_need_creeps: function(spawn_name) {
-        capacity = Game.spawns[spawn_name].room.energyAvailable;
-
+        function creeps_in_queue(queue, role_name) {
+            var count = 0;
+            for (let index = 0; index < queue.length; index++) {
+                const task = queue[index];
+                if (task.mode == "creep" && task.role == role_name) {
+                    count++;
+                }
+            }
+            return count;
+        }
         for (let i = 0; i < Memory.Manage.role_names.length; i++) {
             const role_name = Memory.Manage.role_names[i];
-            var diff = Memory.Manage.creep_count_maxes[role_name] - Memory.Manage.creep_counts[role_name];
-            var newCreepName = role_name + Memory.Manage.creep_counts[role_name];
-            Game.spawns[spawn_name].memory.queue
+            if (Memory.Manage.creep_counts[role_name] + creeps_in_queue(Game.spawns[spawn_name].memory.queue) < 
+                Memory.Manage.creep_count_maxes[role_name]) {
+                var task = {};
+                task.mode = "creep";
+                task.role = role_name;
+                task.body = ManageBodies.get_body(role_name, Game.spawns[spawn_name].room.energyAvailable);
+                task.name = role_name + Memory.Manage.creep_counts[role_name];
+                Game.spawns[spawn_name].memory.queue.push(task);
+            }
         }
     }
 };

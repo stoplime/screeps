@@ -2,12 +2,13 @@
 
 var Role = {
 
-    get_roles: function() {
+    import_roles: function() {
         var roles = {};
         for (let i = 0; i < Memory.Manage["role_keys"].length; i++) {
             const key = Memory.Manage["role_keys"][i];
             roles[key] = require("role." + key);
         }
+        return roles;
 	}
 };
 
