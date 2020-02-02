@@ -5,6 +5,9 @@ var FlagUtils = require("flag.utils");
 var RoleHarvester = {
 
     basic: function(creep) {
+        if (creep.memory == null) {
+            return;
+        }
         if (creep.memory.source == null) {
             creep.memory.source = RoleUtils.get_next_free_source(creep.room).id;
         }
@@ -12,8 +15,11 @@ var RoleHarvester = {
         RoleUtils.filling_up_toggle(creep);
 
         if(creep.memory.filling_up) {
-            if(creep.harvest(Game.getObjectById(creep.Memory.source)) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(Game.getObjectById(creep.Memory.source), {visualizePathStyle: {stroke: "#ffaa00"}});
+            console.log(creep.name, " is filling up.");
+            var harvest_result = creep.harvest(Game.getObjectById(creep.memory.source));
+            console.log("harvest: ", harvest_result);
+            if(harvest_result == ERR_NOT_IN_RANGE) {
+                creep.moveTo(Game.getObjectById(creep.memory.source), {visualizePathStyle: {stroke: "#ffaa00"}});
             }
         }
         else {
@@ -38,7 +44,7 @@ var RoleHarvester = {
     
     static_harvest: function(creep) {
         // Get my_container
-        if (!creep.memory.container_id && creep.pos.inRangeTo(Game.getObjectById(creep.Memory.source), 1)) {
+        if (!creep.memory.container_id && creep.pos.inRangeTo(Game.getObjectById(creep.memory.source), 1)) {
             var containers = creep.room.find(FIND_MY_STRUCTURES, {
                 filter: (structure) => {
                     return (structure.structureType == STRUCTURE_CONTAINER);
@@ -61,8 +67,8 @@ var RoleHarvester = {
         }
 
         // Mine
-        if(creep.harvest(Game.getObjectById(creep.Memory.source)) == ERR_NOT_IN_RANGE) {
-            creep.moveTo(Game.getObjectById(creep.Memory.source), {visualizePathStyle: {stroke: "#ffaa00"}});
+        if(creep.harvest(Game.getObjectById(creep.memory.source)) == ERR_NOT_IN_RANGE) {
+            creep.moveTo(Game.getObjectById(creep.memory.source), {visualizePathStyle: {stroke: "#ffaa00"}});
         }
 
         // Repair my_container

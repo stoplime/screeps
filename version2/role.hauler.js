@@ -6,7 +6,7 @@ var RoleHauler = {
 
     miner_to_spawn: function(creep) {
         // Initialize assign this hauler to a harvester
-        if (!creep.memory.harvester) {
+        if (creep.memory.harvester == null) {
             var harvesters = _.filter(Game.creeps, function(creep) {
                 return creep.memory.role == "harvester" &&
                         creep.memory.hauler == null;
@@ -18,10 +18,11 @@ var RoleHauler = {
         }
         RoleUtils.filling_up_toggle(creep);
 
-        if(creep.memory.filling_up) {
+        if(creep.memory.filling_up != null && creep.memory.filling_up) {
             var my_harvester = Game.creeps[creep.memory.harvester];
+            if (my_harvester == null) return;
             var harvester_container = Game.getObjectById(my_harvester.memory.container_id);
-            var dropped_energy = my_harvester.pos.findClosestByRange(FIND_DROPPED_ENERGY);
+            var dropped_energy = my_harvester.pos.findClosestByRange(FIND_DROPPED_RESOURCES);
             if (harvester_container != null && creep.withdraw(harvester_container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                 creep.moveTo(harvester_container, {visualizePathStyle: {stroke: "#ffaa00"}});
             }

@@ -36,12 +36,12 @@ var RoleUtils = {
 
     get_adjacent_vacants_occupied: function(room, pos) {
         var occupied = 0;
-        Game.creeps.forEach(creep => {
+        for (var creep in Game.creeps) {
             if (creep.room != room) continue;
-            if (creep.Memory.source == null) continue;
-            if (creep.Memory.source.pos != pos) continue;
+            if (creep.memory.source == null) continue;
+            if (creep.memory.source.pos != pos) continue;
             occupied++;
-        });
+        }
         return occupied;
     },
 
@@ -68,7 +68,7 @@ var RoleUtils = {
      * @param {Room} room 
      */
     find_fillable_spawn: function(room) {
-        var targets = creep.room.find(FIND_MY_STRUCTURES, {
+        var targets = room.find(FIND_MY_STRUCTURES, {
             filter: (structure) => {
                 return (structure.structureType == STRUCTURE_EXTENSION || structure.structureType == STRUCTURE_SPAWN) &&
                     structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;

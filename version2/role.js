@@ -16,14 +16,16 @@ var Role = {
 	},
 
     common_update: function(creep) {
-        if (creep.memory.recycle && !creep.pos.inRangeTo(Game.spawns["Spawn1"], 1)) {
-            creep.moveTo(Game.spawns["Spawn1"], {visualizePathStyle: {stroke: "#ff0000"}});
-        }
-        else if (creep.pos.inRangeTo(Game.spawns["Spawn1"], 1)) {
-            var task = {};
-            task.mode = "recycle";
-            task.creep_name = creep.name;
-            Game.spawns["Spawn1"].memory.queue.push(task);
+        if (creep.memory.recycle != null && creep.memory.recycle) {
+            if (!creep.pos.inRangeTo(Game.spawns["Spawn1"], 1)) {
+                creep.moveTo(Game.spawns["Spawn1"], {visualizePathStyle: {stroke: "#ff0000"}});
+            }
+            else if (creep.pos.inRangeTo(Game.spawns["Spawn1"], 1)) {
+                var task = {};
+                task.mode = "recycle";
+                task.creep_name = creep.name;
+                Game.spawns["Spawn1"].memory.queue.push(task);
+            }
         }
     },
 
@@ -32,14 +34,15 @@ var Role = {
         for (var creep_name in Game.creeps) {
             const creep = Game.creeps[creep_name];
             var creep_role = creep.memory.role;
-            console.log(creep_role);
+            // console.log(creep_role);
+            if (creep.memory == null) continue;
             // Common update
             Role.common_update(creep);
             // Role specific update
             switch (creep_role) {
                 // List of Roles
                 case "harvester":
-                    if (_.filter(Game.creeps).length < 4) {
+                    if (creep.memory.hauler == null) {
                         roles[creep_role].basic(creep);
                     }
                     else {

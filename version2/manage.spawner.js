@@ -25,6 +25,9 @@ var ManageSpawner = {
             const task_check = queue[i];
             switch (task_check.mode) {
                 case "creep":
+                    // console.log("name:", task_check.name);
+                    // console.log("\tbody:", task_check.body);
+                    // console.log("\trole:", task_check.role);
                     can_spawn = Game.spawns[spawn_name].spawnCreep(
                         task_check.body,
                         task_check.name,
@@ -34,7 +37,8 @@ var ManageSpawner = {
                     break;
                 case "recycle":
                 case "renew":
-                    if (Game.spawns[spawn_name].pos.inRangeTo(
+                    if (Game.creeps[task_check.creep_name] != null &&
+                        Game.spawns[spawn_name].pos.inRangeTo(
                             Game.creeps[task_check.creep_name].pos, 1)) {
                         can_spawn = 0;
                     }
@@ -96,8 +100,13 @@ var ManageSpawner = {
                 var task = {};
                 task.mode = "creep";
                 task.role = role_name;
-                task.body = ManageBodies.get_body(role_name, Game.spawns[spawn_name].room.energyAvailable);
+                var capacity = Game.spawns[spawn_name].room.energyAvailable;
+                task.body = ManageBodies.get_body(role_name, capacity);
                 task.name = role_name + Memory.Manage.creep_counts[role_name];
+                // console.log("name:", task.name);
+                // console.log("\tbody:", task.body);
+                // console.log("\trole:", task.role);
+                // console.log("\tcapacity:", capacity);
                 Game.spawns[spawn_name].memory.queue.push(task);
             }
         }
