@@ -5,6 +5,10 @@ var FlagUtils = require("flag.utils");
 var RoleHarvester = {
 
     basic: function(creep) {
+        if (creep.memory.source == null) {
+            creep.memory.source = RoleUtils.get_next_free_source(creep.room).id;
+        }
+        
         RoleUtils.filling_up_toggle(creep);
 
         if(creep.memory.filling_up) {

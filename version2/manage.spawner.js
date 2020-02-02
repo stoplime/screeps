@@ -6,7 +6,9 @@ var RoleUtils = require("role.utils");
 var ManageSpawner = {
 
     initialize_memory: function(spawn_name) {
-        Game.spawns[spawn_name].memory.queue = [];
+        if (Game.spawns[spawn_name].memory.queue == null) {
+            Game.spawns[spawn_name].memory.queue = [];
+        }
     },
 
     /**Goes through the spawner's queue of tasks
@@ -57,22 +59,6 @@ var ManageSpawner = {
                     );
                     // Update global memory
                     Memory.Manage.creep_counts[task.role]++;
-                    // Initialize creep role-specific memory
-                    switch (task.role) {
-                        // List of Roles
-                        case "harvester":
-                            creep.memory.source = RoleUtils.get_next_free_source(creep.room).id;
-                            break;
-                        case "upgrader":
-                            break;
-                        case "builder":
-                            break;
-                        case "hauler":
-                            break;
-                    
-                        default:
-                            break;
-                    }
                     break;
                 case "recycle":
                     Game.spawns[spawn_name].recycleCreep(

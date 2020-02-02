@@ -1,8 +1,8 @@
-// RoleHarvester mines energy resources with different stratagies
+// RoleHauler mines energy resources with different stratagies
 var RoleUtils = require("role.utils");
 var FlagUtils = require("flag.utils");
 
-var RoleHarvester = {
+var RoleHauler = {
 
     miner_to_spawn: function(creep) {
         // Initialize assign this hauler to a harvester
@@ -47,4 +47,4 @@ var RoleHarvester = {
     }
 };
 
-module.exports = RoleHarvester;
+module.exports = RoleHauler;
