@@ -39,7 +39,7 @@ var ManageSpawner = {
                         can_spawn = 0;
                     }
                     break;
-            
+
                 default:
                     break;
             }
@@ -74,9 +74,6 @@ var ManageSpawner = {
                 default:
                     break;
             }
-            queue.shift();
-        }
-        else if (task.skipable) {
             queue.shift();
         }
     },

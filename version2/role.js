@@ -8,8 +8,8 @@ var Role = {
 
     import_roles: function() {
         var roles = {};
-        for (let i = 0; i < Memory.Manage["role_keys"].length; i++) {
-            const key = Memory.Manage["role_keys"][i];
+        for (let i = 0; i < Memory.Manage.role_names.length; i++) {
+            const key = Memory.Manage.role_names[i];
             roles[key] = require("role." + key);
         }
         return roles;
@@ -23,22 +23,23 @@ var Role = {
             var task = {};
             task.mode = "recycle";
             task.creep_name = creep.name;
-            Game.spawns[spawn_name].memory.queue.push(task);
+            Game.spawns["Spawn1"].memory.queue.push(task);
         }
     },
 
     role_update: function() {
         var roles = Role.import_roles();
-        for (let i = 0; i < Game.creeps.length; i++) {
-            const creep = Game.creeps[i];
+        for (var creep_name in Game.creeps) {
+            const creep = Game.creeps[creep_name];
             var creep_role = creep.memory.role;
+            console.log(creep_role);
             // Common update
             Role.common_update(creep);
             // Role specific update
             switch (creep_role) {
                 // List of Roles
                 case "harvester":
-                    if (Game.creeps.length < 4) {
+                    if (_.filter(Game.creeps).length < 4) {
                         roles[creep_role].basic(creep);
                     }
                     else {
