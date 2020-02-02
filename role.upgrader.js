@@ -1,36 +1,29 @@
-var role = require("role");
+// RoleUpgrader upgrades the room controller
+var RoleUtils = require("role.utils");
+var FlagUtils = require("flag.utils");
 
-class roleUpgrader extends role {
-    /**Initialize function
-     * 
-     * @param {*} creep 
-     */
-    constructor(creep) {
-        super(creep);
-    }
+var RoleUpgrader = {
 
-    run() {
-        if(this.creep.memory.upgrading && this.creep.carry.energy == 0) {
-            this.creep.memory.upgrading = false;
-            this.creep.say("🔄 harvest");
-	    }
-	    if(!this.creep.memory.upgrading && this.creep.carry.energy == this.creep.carryCapacity) {
-	        this.creep.memory.upgrading = true;
-	        this.creep.say("⚡ upgrade");
-	    }
+    curier_upgrading: function(creep) {
+        RoleUtils.filling_up_toggle(creep);
 
-	    if(this.creep.memory.upgrading) {
-            if(this.creep.upgradeController(this.creep.room.controller) == ERR_NOT_IN_RANGE) {
-                this.creep.moveTo(this.creep.room.controller, {visualizePathStyle: {stroke: "#ffffff"}});
+        if(creep.memory.filling_up) {
+            // if no container, then get it from spawn
+            if (creep.withdraw(Game.spawns["Spawn1"], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(Game.spawns["Spawn1"], {visualizePathStyle: {stroke: "#ffaa00"}});
             }
         }
         else {
-            var sources = this.creep.room.find(FIND_SOURCES);
-            if(this.creep.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
-                this.creep.moveTo(sources[0], {visualizePathStyle: {stroke: "#ffaa00"}});
+            // Upgrade the controller
+            if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(creep.room.controller, {visualizePathStyle: {stroke: "#ffaa00"}});
             }
         }
-	}
+    },
+    
+    static_upgrading: function(creep) {
+        
+    },
 };
 
-module.exports = roleUpgrader;
+module.exports = RoleUpgrader;
