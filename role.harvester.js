@@ -15,9 +15,9 @@ var RoleHarvester = {
         RoleUtils.filling_up_toggle(creep);
 
         if(creep.memory.filling_up) {
-            console.log(creep.name, " is filling up.");
+            // console.log(creep.name, " is filling up.");
             var harvest_result = creep.harvest(Game.getObjectById(creep.memory.source));
-            console.log("harvest: ", harvest_result);
+            // console.log("harvest: ", harvest_result);
             if(harvest_result == ERR_NOT_IN_RANGE) {
                 creep.moveTo(Game.getObjectById(creep.memory.source), {visualizePathStyle: {stroke: "#ffaa00"}});
             }

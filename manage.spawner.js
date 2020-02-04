@@ -51,6 +51,7 @@ var ManageSpawner = {
                 task = task_check;
                 break;
             }
+            break;
         }
 
         if (task != null) {
@@ -98,14 +99,19 @@ var ManageSpawner = {
         }
         for (let i = 0; i < Memory.Manage.role_names.length; i++) {
             const role_name = Memory.Manage.role_names[i];
-            if (Memory.Manage.creep_counts[role_name] + creeps_in_queue(queue) < 
+            var creep_count = Memory.Manage.creep_counts[role_name] + creeps_in_queue(queue, role_name);
+            // console.log("role:", role_name);
+            // console.log("\tcreep_count:", creep_count);
+            // console.log("\tcreep_count queue:", creeps_in_queue(queue, role_name));
+            // console.log("\tcreep_count_maxes:", Memory.Manage.creep_count_maxes[role_name]);
+            if (creep_count < 
                 Memory.Manage.creep_count_maxes[role_name]) {
                 var task = {};
                 task.mode = "creep";
                 task.role = role_name;
                 var capacity = Game.spawns[spawn_name].room.energyAvailable;
                 task.body = ManageBodies.get_body(role_name, capacity);
-                task.name = role_name + Memory.Manage.creep_counts[role_name];
+                task.name = role_name + creep_count;
                 // console.log("name:", task.name);
                 // console.log("\tbody:", task.body);
                 // console.log("\trole:", task.role);

@@ -1,4 +1,5 @@
 // Manage holds all the spawnning and util functions
+var RoleUtils = require("role.utils");
 
 var Manage = {
 
@@ -39,6 +40,19 @@ var Manage = {
             const site = constructions[i];
             Memory.Manage.constructions.push({"id": site.id, "remaining": site.progressTotal - site.progress, "type": site.type, "claimable": true});
         }
+    },
+
+    update_creep_count_maxes: function(room) {
+        var sources = room.find(FIND_SOURCES);
+        var total_energy_spots = 0;
+        for (let i = 0; i < sources.length; i++) {
+            const source = sources[i];
+            if (source == null || source.pos == null) continue;
+            const [adjacents, count] = RoleUtils.get_adjacent_vacants(room, source.pos);
+            total_energy_spots += count;
+        }
+        Memory.Manage.creep_count_maxes["harvester"] = total_energy_spots;
+        Memory.Manage.creep_count_maxes["hauler"] = total_energy_spots;
     },
 };
 

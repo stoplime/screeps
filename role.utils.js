@@ -36,10 +36,15 @@ var RoleUtils = {
 
     get_adjacent_vacants_occupied: function(room, pos) {
         var occupied = 0;
-        for (var creep in Game.creeps) {
+        for (var creep_name in Game.creeps) {
+            var creep = Game.creeps[creep_name];
+            console.log(creep.name);
+            console.log("\troom:", creep.room, room);
             if (creep.room != room) continue;
-            if (creep.memory.source == null) continue;
-            if (creep.memory.source.pos != pos) continue;
+            console.log("\tsource:", Game.getObjectById(creep.memory.source));
+            if (Game.getObjectById(creep.memory.source) == null) continue;
+            console.log("\tpos:", Game.getObjectById(creep.memory.source).pos, pos);
+            if (Game.getObjectById(creep.memory.source).pos != pos) continue;
             occupied++;
         }
         return occupied;
@@ -51,11 +56,15 @@ var RoleUtils = {
     },
 
     get_next_free_source: function(room) {
+        // TODO: sort by closest to spawn
         var sources = room.find(FIND_SOURCES);
         for (let i = 0; i < sources.length; i++) {
             const source = sources[i];
             const [adjacents, available_count] = RoleUtils.get_adjacent_vacants(room, source.pos);
             var occupied = RoleUtils.get_adjacent_vacants_occupied(room, source.pos);
+            console.log(source.pos.x);
+            console.log("\t available:", available_count);
+            console.log("\t count:", occupied);
             if (available_count > occupied) {
                 return source;
             }
