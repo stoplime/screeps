@@ -83,6 +83,9 @@ var ManageSpawner = {
     },
     
     check_need_creeps: function(spawn_name) {
+        var queue = Game.spawns[spawn_name].memory.queue;
+        if (queue.length >= 20) return;
+
         function creeps_in_queue(queue, role_name) {
             var count = 0;
             for (let index = 0; index < queue.length; index++) {
@@ -95,7 +98,7 @@ var ManageSpawner = {
         }
         for (let i = 0; i < Memory.Manage.role_names.length; i++) {
             const role_name = Memory.Manage.role_names[i];
-            if (Memory.Manage.creep_counts[role_name] + creeps_in_queue(Game.spawns[spawn_name].memory.queue) < 
+            if (Memory.Manage.creep_counts[role_name] + creeps_in_queue(queue) < 
                 Memory.Manage.creep_count_maxes[role_name]) {
                 var task = {};
                 task.mode = "creep";
@@ -107,7 +110,8 @@ var ManageSpawner = {
                 // console.log("\tbody:", task.body);
                 // console.log("\trole:", task.role);
                 // console.log("\tcapacity:", capacity);
-                Game.spawns[spawn_name].memory.queue.push(task);
+                queue.push(task);
+                return;
             }
         }
     }

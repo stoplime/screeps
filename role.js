@@ -24,7 +24,9 @@ var Role = {
                 var task = {};
                 task.mode = "recycle";
                 task.creep_name = creep.name;
-                Game.spawns["Spawn1"].memory.queue.push(task);
+                if (Game.spawns["Spawn1"].memory.queue.length < 20) {
+                    Game.spawns["Spawn1"].memory.queue.push(task);
+                }
             }
         }
     },

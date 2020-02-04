@@ -23,7 +23,8 @@ var RoleBuilder = {
             if (!creep.memory.construction_site) {
                 RoleBuilder.claim_construction_site(creep);
             }
-            var my_construction = Game.getObjectById(creep.memory.construction_site);
+            var my_construction = Game.getObjectById(creep.memory.construction_site.id);
+            if (my_construction == null) return;
             if (creep.build(my_construction) == ERR_NOT_IN_RANGE) {
                 creep.moveTo(my_construction, {visualizePathStyle: {stroke: "#ffffff"}});
             }
